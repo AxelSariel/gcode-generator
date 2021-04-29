@@ -1,0 +1,110 @@
+# Acu-Rite MILLPWR G-Code Conventions
+# +------+------------------------------+--------------------------------------------+
+# | Code | Description                  | Notes                                      |
+# +------+------------------------------+--------------------------------------------+
+# |   F  | Set Feed Rate                | Uses current program units (ipm or mmpm).  |
+# |      |                              | Applies to current and subsequent blocks.  |
+# +------+------------------------------+--------------------------------------------+
+# |  G0  | Linear Interpolation (Rapid) |                                            |
+# +------+------------------------------+ Commands generate table/quill motion.      |
+# |  G1  | Linear Interpolation (Feed)  | Applies to current and subsequent blocks   |
+# +------+------------------------------+ containing at least one X, Y, or Z         |
+# |  G2  | Circular Interpolation (CW)  | coordinate. Default is a linear move at    |
+# +------+------------------------------+ feed (G1).                                 |
+# |  G3  | Circular Interpolation (CCW) |                                            |
+# +------+------------------------------+--------------------------------------------+
+# |      |                              | System pauses for specified period of time |
+# |  G4  | Dwell                        | prior to any motion commands within the    |
+# |      |                              | blocks. Period of time determined by       |
+# |      |                              | P value.                                   |
+# +------+------------------------------+--------------------------------------------+
+# |  G17 | XY Plane Selection           |                                            |
+# +------+------------------------------+ Set the plane in which arcs are executed.  |
+# |  G18 | XZ Plane Selection           | Applies to current and subsequent blocks.  |
+# +------+------------------------------+ Default is G17 (XY).                       |
+# |  G19 | YZ Plane Selection           |                                            |
+# +------+------------------------------+--------------------------------------------+
+# |  G20 | Set Program Units (Inch)     | Set the unit of measure. Applies to        |
+# +------+------------------------------+ current and subsequent blocks. Default     |
+# |  G21 | Set Program Units (MM)       | is G20 (Inch).                             |
+# +------+------------------------------+--------------------------------------------+
+# |  G61 | Set "stop" Path Mode         | Set the path mode. Applies to current      |
+# +------+------------------------------+ and subsequent blocks. Default is          |
+# |  G64 | Set "continuous" Path Mode   | G64 (continuous).                          |
+# +------+------------------------------+--------------------------------------------+
+# |      |                              | Cancels the current motion mode. Motion    |
+# |  G80 | Cancel Motion Mode           | is reset to G1. X, Y, and Z coordinates    |
+# |      |                              | are reset to no motion. I, J, and K        |
+# |      |                              | coordinates are reset to no offset.        |
+# +------+------------------------------+--------------------------------------------+
+# |  G90 | Set Offset Mode (ABS)        | Set mode for interpreting coordinates. In  |
+# |      |                              | ABS mode, coordinates are relative to      |
+# |      |                              | MILLPWR's datum. In INC mode, coordinates  |
+# +------+------------------------------+ are relative to the tool's position after  |
+# |  G91 | Set Offset Mode (INC)        | completing the previous move. Applies to   |
+# |      |                              | current and subsequent blocks. Default is  |
+# |      |                              | G90 (ABS).                                 |
+# +------+------------------------------+--------------------------------------------+
+# |   I  | X Axis Offset to ARC Center  |                                            |
+# +------+------------------------------+ Offset applies to current and subsequent   |
+# |   J  | Y Axis Offset to ARC Center  | arc blocks (G2 and G3). Default is offset. |
+# +------+------------------------------+                                            |
+# |   K  | Z Axis Offset to ARC Center  |                                            |
+# +------+------------------------------+--------------------------------------------+
+# |   N  | Line Number                  | Line numbering is optional and for         |
+# |      |                              | readability only.                          |
+# +------+------------------------------+--------------------------------------------+
+# |   O  | Program Number               | Program number is optional.                |
+# +------+------------------------------+--------------------------------------------+
+# |  M0  | Program Stop                 | Stops the program after completion of the  |
+# |      |                              | block. Cursor moves to subsequent program  |
+# |      |                              | block. Current settings remain in effect.  |
+# +------+------------------------------+--------------------------------------------+
+# |  M2  | Program End                  | Stops the program after completion of the  |
+# |      |                              | block. Cursor moves to beginning of        |
+# |      |                              | program. Current settings are reset to     |
+# |      |                              | default values.                            |
+# +------+------------------------------+--------------------------------------------+
+# |  M3  | Spindle On (CW)              | If spindle control hardware is present,    |
+# +------+------------------------------+ the spindle is turned on or off            |
+# |  M4  | Spindle On (CCW)             | automatically. If hardware not present,    |
+# +------+------------------------------+ the user is prompted to turn the spindle   |
+# |  M5  | Spindle Off                  | on or off.                                 |
+# +------+------------------------------+--------------------------------------------+
+# |  M6  | Tool Change                  | If tool specified does not match current   |
+# |      |                              | tool, user is prompted to change tool.     |
+# |      |                              | Z-axis datum must be set correctly on new  |
+# |      |                              | tool (Present message to user).            |
+# +------+------------------------------+--------------------------------------------+
+# |   T  | Tool Selection               | Number of tool to use at next tool change. |
+# |      |                              | Applies to current and subsequent blocks   |
+# |      |                              | containing tool change (M6). Default is    |
+# |      |                              | no tool selection.                         |
+# +------+------------------------------+--------------------------------------------+
+# |   X  | X Axis Coordinate            | Coordinates represent the destination for  |
+# +------+------------------------------+                                            |
+# |   Y  | Y Axis Coordinate            | the G0, G1, G2, or G3 command currently    |
+# +------+------------------------------+ in effect. They use the current units (G20 |
+# |   Z  | Z Axis Coordinate            | and G21) and offset mode (G90 and G91).    |
+# +------+------------------------------+--------------------------------------------+
+# Table generated by https://www.tablesgenerator.com/text_tables#
+#
+# Blocks may contain multiple commands
+# Executing precedence:
+#      Messages
+#      Tool Change
+#      Spindle Control
+#      Dwell
+#      Motion
+#      Stop
+#
+# User comments should be enclosed in parentheses
+#
+# Text following MSG in a comment (max 22 characters) is displayed at run-time.
+# Program pauses until user acknowledges the message
+#
+# Arcs must be programmed by endpoint and center
+#
+# Text following a comment character are ignored ;
+#
+# Adapted from Acu-Rite MILLPWR Operating Manual
